@@ -4,10 +4,6 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi import Request
 from routes import event_routes, weather_routes, recommendation_routes
-from database import engine, Base
-
-# Create database tables
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Smart Event Planner")
 

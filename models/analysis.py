@@ -1,16 +1,28 @@
-from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
-from database import Base
 from datetime import datetime
 
-class EventWeatherAnalysis(Base):
-    __tablename__ = "event_weather_analysis"
+class EventWeatherAnalysis:
+    def __init__(self, id=None, event_id=None, score=None, remarks=None, created_at=None):
+        self.id = id
+        self.event_id = event_id
+        self.score = score
+        self.remarks = remarks
+        self.created_at = created_at or datetime.utcnow()
 
-    id = Column(Integer, primary_key=True, index=True)
-    event_id = Column(Integer, ForeignKey("events.id"))
-    score = Column(Float)
-    remarks = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    @classmethod
+    def from_supabase(cls, data):
+        return cls(
+            id=data.get('id'),
+            event_id=data.get('event_id'),
+            score=data.get('score'),
+            remarks=data.get('remarks'),
+            created_at=data.get('created_at')
+        )
 
-    # Relationships
-    event = relationship("Event", back_populates="analysis") 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'event_id': self.event_id,
+            'score': self.score,
+            'remarks': self.remarks,
+            'created_at': self.created_at
+        } 
